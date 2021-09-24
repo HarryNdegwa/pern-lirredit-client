@@ -1,8 +1,26 @@
 import React, { useState } from "react";
+import { useMutation } from "urql";
 
 interface registerProps {}
 
+const REGISTER_MUT = `
+mutation Register($username:String!,$password:String!){
+    register(options:{username:$username,password:$password}){
+      errors{
+        field
+        message
+      }
+      user{
+        id
+        username
+      }
+    }
+  }
+  `;
+
 const Register: React.FC<registerProps> = ({}) => {
+  const [, register] = useMutation(REGISTER_MUT);
+
   const [values, setValues] = useState({ username: "", password: "" });
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -13,6 +31,7 @@ const Register: React.FC<registerProps> = ({}) => {
       onSubmit={(e) => {
         e.preventDefault();
         console.log(`values`, values);
+        register(values);
       }}
       className="col-md-6 mx-auto form-group"
     >
