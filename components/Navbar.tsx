@@ -1,10 +1,15 @@
 import React from "react";
 import Link from "next/link";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
+import { isServer } from "../utils/isServer";
 
 const Navbar: React.FC<{}> = ({}) => {
-  const [{ fetching, data }] = useMeQuery();
+  const [{ fetching, data }] = useMeQuery({
+    pause: isServer(),
+  });
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
+
+  console.log(`data`, data);
 
   let body;
 
