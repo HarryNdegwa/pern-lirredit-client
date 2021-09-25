@@ -33,7 +33,7 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
         const response = await changePassword(payload);
 
         if (response.data?.changePassword?.errors) {
-          setError({ password: "User not found" });
+          setError({ password: "Token expired" });
         } else {
           if (btnRef && btnRef.current) {
             btnRef.current.click();
