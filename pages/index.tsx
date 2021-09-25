@@ -1,8 +1,14 @@
+import React from "react";
+import Navbar from "../components/Navbar";
+
 const Home = () => {
   return (
-    <div>
-      <h3>Helloo World</h3>
-    </div>
+    <>
+      <Navbar />
+      <div>
+        <h3>Helloo World</h3>
+      </div>
+    </>
   );
 };
 
