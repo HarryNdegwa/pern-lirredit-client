@@ -1,37 +1,39 @@
+import { useRouter } from "next/dist/client/router";
 import React, { useState } from "react";
-import { useMutation } from "urql";
+import { useRegisterMutation } from "../generated/graphql";
+import { toErrorMap } from "../utils/toErrorMap";
 
 interface registerProps {}
 
-const REGISTER_MUT = `
-mutation Register($username:String!,$password:String!){
-    register(options:{username:$username,password:$password}){
-      errors{
-        field
-        message
-      }
-      user{
-        id
-        username
-      }
-    }
-  }
-  `;
+export interface registerErrors {
+  username: string;
+  password: string;
+}
 
 const Register: React.FC<registerProps> = ({}) => {
-  const [, register] = useMutation(REGISTER_MUT);
-
+  const [, register] = useRegisterMutation();
+  const [errors, setErrors] = useState<registerErrors>({
+    username: "",
+    password: "",
+  });
+  const router = useRouter();
   const [values, setValues] = useState({ username: "", password: "" });
-  const handleChange = (e) => {
+  const handleChange = (e: any): void => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
         console.log(`values`, values);
-        register(values);
+        const response = await register(values);
+
+        if (response.data?.register?.errors) {
+          setErrors(toErrorMap(response.data.register.errors));
+        } else {
+          router.push("/");
+        }
       }}
       className="col-md-6 mx-auto form-group"
     >
@@ -44,6 +46,7 @@ const Register: React.FC<registerProps> = ({}) => {
         onChange={handleChange}
         className="form-control"
       />
+      {errors.username && <p className="text-danger">{errors.username}</p>}
       <label htmlFor="password" />
       <input
         id="password"
@@ -53,6 +56,7 @@ const Register: React.FC<registerProps> = ({}) => {
         onChange={handleChange}
         className="form-control"
       />
+      {errors.password && <p className="text-danger">{errors.password}</p>}
       <div className="d-grid gap-2">
         <button type="submit" className="btn btn-secondary mt-4">
           Submit
