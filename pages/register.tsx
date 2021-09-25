@@ -13,9 +13,14 @@ const Register: React.FC<registerProps> = ({}) => {
   const [errors, setErrors] = useState<authErrors>({
     username: "",
     password: "",
+    email: "",
   });
   const router = useRouter();
-  const [values, setValues] = useState({ username: "", password: "" });
+  const [values, setValues] = useState({
+    username: "",
+    password: "",
+    email: "",
+  });
   const handleChange = (e: any): void => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
@@ -24,7 +29,6 @@ const Register: React.FC<registerProps> = ({}) => {
     <form
       onSubmit={async (e) => {
         e.preventDefault();
-        console.log(`values`, values);
         const response = await register(values);
 
         if (response.data?.register?.errors) {
@@ -35,7 +39,7 @@ const Register: React.FC<registerProps> = ({}) => {
       }}
       className="col-md-6 mx-auto form-group"
     >
-      <label htmlFor="username" />
+      <label htmlFor="username">Username</label>
       <input
         id="username"
         type="text"
@@ -45,7 +49,19 @@ const Register: React.FC<registerProps> = ({}) => {
         className="form-control"
       />
       {errors.username && <p className="text-danger">{errors.username}</p>}
-      <label htmlFor="password" />
+      <label htmlFor="email">Email</label>
+      <input
+        id="email"
+        type="text"
+        name="email"
+        value={values.email}
+        onChange={handleChange}
+        className="form-control"
+      />
+      {errors.email && <p className="text-danger">{errors.email}</p>}
+
+      <label htmlFor="password">Password</label>
+
       <input
         id="password"
         type="password"

@@ -27,10 +27,7 @@ const Login: React.FC<loginProps> = ({}) => {
     <form
       onSubmit={async (e) => {
         e.preventDefault();
-        console.log(`values`, values);
         const response = await login(values);
-
-        console.log(`response`, response);
 
         if (response.data?.login?.errors) {
           setErrors(toErrorMap(response.data.login.errors));
@@ -40,7 +37,7 @@ const Login: React.FC<loginProps> = ({}) => {
       }}
       className="col-md-6 mx-auto form-group"
     >
-      <label htmlFor="username" />
+      <label htmlFor="username">Username</label>
       <input
         id="username"
         type="text"
@@ -50,7 +47,7 @@ const Login: React.FC<loginProps> = ({}) => {
         className="form-control"
       />
       {errors.username && <p className="text-danger">{errors.username}</p>}
-      <label htmlFor="password" />
+      <label htmlFor="password">Password</label>
       <input
         id="password"
         type="password"
