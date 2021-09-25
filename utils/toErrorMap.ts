@@ -1,11 +1,11 @@
 import { FieldError } from "../generated/graphql";
-import { registerErrors } from "../pages/register";
+import { authErrors } from "./auth";
 
-export const toErrorMap = (errors: FieldError[]): registerErrors => {
+export const toErrorMap = (errors: FieldError[]): authErrors => {
   const errorMap: any = {};
   for (let error of errors) {
     errorMap[error.field] = error.message;
   }
 
-  return errorMap as registerErrors;
+  return errorMap as authErrors;
 };

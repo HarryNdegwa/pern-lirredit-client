@@ -1,19 +1,22 @@
 import { useRouter } from "next/dist/client/router";
 import React, { useState } from "react";
-import { useRegisterMutation } from "../generated/graphql";
+import { useLoginMutation } from "../generated/graphql";
 import { authErrors } from "../utils/auth";
 import { toErrorMap } from "../utils/toErrorMap";
 
-interface registerProps {}
+interface loginProps {}
 
-const Register: React.FC<registerProps> = ({}) => {
-  const [, register] = useRegisterMutation();
+const Login: React.FC<loginProps> = ({}) => {
+  const [values, setValues] = useState({ username: "", password: "" });
   const [errors, setErrors] = useState<authErrors>({
     username: "",
     password: "",
   });
+
   const router = useRouter();
-  const [values, setValues] = useState({ username: "", password: "" });
+
+  const [, login] = useLoginMutation();
+
   const handleChange = (e: any): void => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
@@ -23,10 +26,12 @@ const Register: React.FC<registerProps> = ({}) => {
       onSubmit={async (e) => {
         e.preventDefault();
         console.log(`values`, values);
-        const response = await register(values);
+        const response = await login(values);
 
-        if (response.data?.register?.errors) {
-          setErrors(toErrorMap(response.data.register.errors));
+        console.log(`response`, response);
+
+        if (response.data?.login?.errors) {
+          setErrors(toErrorMap(response.data.login.errors));
         } else {
           router.push("/");
         }
@@ -62,4 +67,4 @@ const Register: React.FC<registerProps> = ({}) => {
   );
 };
 
-export default Register;
+export default Login;
